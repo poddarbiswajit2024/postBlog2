@@ -6,15 +6,20 @@
 
         <script src=" https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
-    
+
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.css" />
-    
+
         <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/1.1.3/sweetalert.min.js"></script>
-    
+
+        <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+
+        <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
+
+        <meta name="csrf-token" content="xxx">
     </head>
-    <body>
-        
-   
+
+
+
 
 <x-app-layout>
     <x-slot name="header">
@@ -24,9 +29,10 @@
     </x-slot>
 
     <div class="justify-center items-center px-4">
-        <form action="{{ route("posts.store") }}" method="POST">
+        {{--  --}}
+        <form id="postForm" action="{{ route("posts.store") }}" method="POST" >
             @csrf
-              @method('POST')
+            @method('POST')
             <div class="mb-4">
             <label class="block text-gray-700 text-sm font-bold mb-2" for="name">
                 Post Title
@@ -41,68 +47,18 @@
         </label>
             </div>
             <div class="flex items-center justify-between">
-            <button class=" remove-user bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
+            <button class=" remove-user bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" id="submit" type="submit">
                 Submit
                 </button>
             </div>
         </form>
     </div>
 
-</body>
+
+
+
 </html>
 
-    <script type="text/javascript">
-
-        $("body").on("click",".remove-user",function(){
-
-            var current_object = $(this);
-
-            swal({
-
-                title: "Are you sure?",
-
-                text: "You will not be able to recover this imaginary file!",
-
-                type: "error",
-
-                showCancelButton: true,
-
-                dangerMode: true,
-
-                cancelButtonClass: '#DD6B55',
-
-                confirmButtonColor: '#dc3545',
-
-                confirmButtonText: 'Delete!',
-
-            },function (result) {
-
-                if (result) {
-
-                    // var action = current_object.attr('data-action');
-
-                    // var token = jQuery('meta[name="csrf-token"]').attr('content');
-
-                    // var id = current_object.attr('data-id');
-
-
-                    // $('body').html("<form class='form-inline remove-form' method='post' action='"+action+"'></form>");
-
-                    // $('body').find('.remove-form').append('<input name="_method" type="hidden" value="delete">');
-
-                    // $('body').find('.remove-form').append('<input name="_token" type="hidden" value="'+token+'">');
-
-                    // $('body').find('.remove-form').append('<input name="id" type="hidden" value="'+id+'">');
-
-                    // $('body').find('.remove-form').submit();
-
-                }
-
-            });
-
-        });
-
-    </script>
 
 
 </x-app-layout>

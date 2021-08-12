@@ -17,9 +17,9 @@ class postController extends Controller
     public function index()
     {
         //
-        $post = Post::latest()->paginate(20);      
+        $post = Post::latest()->paginate(20);
         return view('post', ['posts' => $post]);
-       
+
     }
 
     /**
@@ -29,7 +29,7 @@ class postController extends Controller
      */
     public function create(Request $request)
     {
-        return view('createpost');       
+        return view('createpost');
     }
 
     /**
@@ -39,7 +39,9 @@ class postController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
-    {   
+    {
+
+        Log::info("store");
         $validator = $request->validate([
 
             'title' => 'required',
@@ -47,7 +49,7 @@ class postController extends Controller
 
         ]);
 
-        $post = new Post();       
+        $post = new Post();
         $post->user_id = Auth::User()->id;
         $post->title = $request->title;
         $post->body = $request->body;
@@ -75,6 +77,11 @@ class postController extends Controller
     public function edit($id)
     {
         //
+        $post = Post3::find($id);
+
+        return response()->json([
+            'data' => $post22,
+        ]);
     }
 
     /**
@@ -87,6 +94,7 @@ class postController extends Controller
     public function update(Request $request, $id)
     {
         //
+
     }
 
     /**
