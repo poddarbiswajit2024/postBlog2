@@ -42,13 +42,11 @@ class postController extends Controller
     {
 
         Log::info("store");
-       
 
         $request->validate([
             'title' => 'required|max:255',
             'body' => 'required|max:500',
         ]);
-
         $post = new Post();
         $post->user_id = Auth::User()->id;
         $post->title = $request->title;
@@ -77,6 +75,7 @@ class postController extends Controller
     public function edit($id)
     {
         //
+        return ("hey");
         $post = Post3::find($id);
 
         return response()->json([
@@ -93,8 +92,13 @@ class postController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
-
+        //dd($request->all());
+        $post = post::find($request->post_id);
+        $post->user_id = Auth::User()->id;
+        $post->title = $request->title;
+        $post->body = $request->body;
+        $post->save();
+        return redirect()->route('posts.index');
     }
 
     /**
@@ -103,8 +107,12 @@ class postController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         //
+        dd($request->all());
+        $cliente = Client::find($id);
+        $cliente->delete(); //delete the client
+        return "inside destroy";
     }
 }

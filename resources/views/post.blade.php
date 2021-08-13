@@ -81,7 +81,8 @@
                  <button class="py-2 px-4 bg-red-500 text-white font-semibold
                  rounded-lg shadow-md hover:bg-green-700 focus:outline-none
                  focus:ring-2 focus:ring-green-400 focus:ring-opacity-75" id="editPost"
-                 data-id="{{ $post->id }}" data-target="#editPostModal" data-toggle="modal">
+                 data-id="{{ $post->id }}" data-title="{{ $post->title }}"
+                 data-body="{{ $post->body }}" data-target="#editPostModal" data-toggle="modal">
                     Edit Post
                   </button>
 
@@ -94,11 +95,8 @@
                   <button  class="deleteRecord py-2 px-4 bg-red-900 text-white font-semibold
                   rounded-lg shadow-md hover:bg-green-900 focus:outline-none focus:ring-2
                   focus:ring-green-400 focus:ring-opacity-75" data-target="#deleteModal"
-                   data-toggle="modal" >
-                    Delete Post {{ $post->id }}
-                    {{-- py-2 px-4 bg-red-900 text-white font-semibold
-                  rounded-lg shadow-md hover:bg-green-900 focus:outline-none focus:ring-2
-                  focus:ring-green-400 focus:ring-opacity-75" data-id="{{ $post->id }}" --}}
+                   data-toggle="modal" data-id="{{ $post->id }}" >
+                    Delete Post
                   </button>
         </div>
 
@@ -127,7 +125,10 @@
               </button>
             </div>
             <div class="modal-body">
-                <form>
+                <form id="postForm" action="{{route("posts.store")}}" method="POST">
+                    @csrf
+                    @method('POST')
+
                     <div class="form-group row">
                       <label for="inputEmail3" class="col-sm-3 col-form-label">Title</label>
                       <div class="col-sm-9">
@@ -140,7 +141,7 @@
                       <div class="col-sm-9">
                         <textarea class="form-control" id="body" name="body" rows="3"></textarea>
                         {{-- <input type="password" class="form-control" id="inputPassword3" placeholder="Password"> --}}
-                      </div>                      
+                      </div>
                     </div>
 
                     <div class="form-group row">
@@ -163,6 +164,22 @@
       {{-- modal Edit window --}}
 
       <div class="modal fade" id="editPostModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <script>
+
+
+                $('#editPostModal').on('shown.bs.modal', function (event) {
+                    var button=$(event.relatedTarget);
+                    var title=button.data('title');
+                    var body=button.data('body');
+                    var post_id=button.data('id');
+                    var modal=$(this);
+                    modal.find('.modal-body #title').val(title);
+                    modal.find('.modal-body #body').val(body);
+                    modal.find('.modal-body #post_id').val(post_id);
+
+
+                });
+         </script>
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header bg-danger text-light">
@@ -172,11 +189,16 @@
               </button>
             </div>
             <div class="modal-body">
-                <form>
+                <form id="formedit" action="{{route('posts.update','1')}}" method="post">
+
+
+                    @csrf
+                    @method('PUT')
+
                     <div class="form-group row" id="postData">
                         <input type="hidden" id="post_id" name="post_id" value="">
-                      <label for="inputEmail3" class="col-sm-2 col-form-label">Title</label>
-                      <div class="col-sm-10">
+                      <label for="inputEmail3" class="col-sm-3 col-form-label">Title</label>
+                      <div class="col-sm-9">
                         <textarea class="form-control" id="title" name="title" rows="3"></textarea>
                         {{-- <input type="email" class="form-control" id="inputEmail3" placeholder="Email"> --}}
                       </div>
@@ -208,10 +230,24 @@
 
       {{-- code for delete modal --}}
       <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <script>
+
+
+            $('#deleteModal').on('shown.bs.modal', function (event) {
+                var button=$(event.relatedTarget);
+                var post_id=button.data('id');
+                var modal=$(this);
+                modal.find('.modal-body #post_id_Del').val(post_id);
+
+
+            });
+     </script>
+
         <div class="modal-dialog" role="document">
           <div class="modal-content">
             <div class="modal-header bg-danger text-light">
               <h5 class="modal-title" id="exampleModalLabel">Delete Post</h5>
+              <input type="hidden" id="post_id_Del" name="post_id_Del" value="">
               <button type="button" class="close text-light" data-dismiss="modal" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
               </button>
@@ -220,8 +256,13 @@
               <h4>Are You Sure?</h4>
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-danger">Delete?</button>
+                <form id="formdelete" action="{{route('posts.destroy','1')}}" method="post">
+                        @csrf
+                        @method('DELETE')
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-danger">Delete?</button>
+                </form>
+
             </div>
           </div>
         </div>
@@ -231,62 +272,5 @@
 
 
       {{-- script for edit --}}
-    @push('script')
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
-    <script>
 
-    $(document).ready(function () {
-
-    $.ajaxSetup({
-        headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-    });
-
-    $('body').on('click', '#editPost', function (event) {
-        event.preventDefault()
-        var id = $("#post_id").val();
-        var name = $("#title").val();
-        var body = $("#body").val();
-
-        $.ajax({
-        url: 'color/' + id,
-        type: "POST",
-        data: {
-            id: id,
-            name: name,
-            body:body,
-        },
-        dataType: 'json',
-        success: function (data) {
-
-            $('#postData').trigger("reset");
-            $('#editPostModal').modal('hide');
-            window.location.reload(true);
-        }
-    });
-    });
-
-    $('body').on('click', '#editPost', function (event) {
-
-        event.preventDefault();
-        var id = $(this).data('id');
-        console.log(id)
-        $.get('posts/' + id + '/edit', function (data) {
-            // $('#userCrudModal').html("Edit category");
-            $('#submit').val("Edit category");
-            $('#editPostModal').modal('show');
-            $('#post_id').val(data.data.id);
-            $('#title').val(data.data.name);
-            $('#body').val(data.data.name);
-        })
-    });
-
-    });
-    </script>
-    @endpush
-
-
-{{-- script end for edit --}}
 </x-app-layout>
