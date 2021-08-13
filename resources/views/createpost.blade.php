@@ -38,12 +38,18 @@
                 Post Title
                 </label>
                 <textarea class="shadow form-textarea mt-1 block w-full border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" rows="5" name="title" placeholder="Title of the Post"></textarea>
+                @error('title')
+                          <div class="alert alert-danger">{{ $message }}</div>
+                @enderror
             </div>
 
             <div class="mb-4">
             <label class="block text-gray-700 text-sm font-bold mb-2">
             Post Body
             <textarea class="shadow form-textarea mt-1 block w-full border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" rows="5" name="body" placeholder="Body of the Post"></textarea>
+            @error('body')
+                <div class="alert alert-danger">{{ $message }}</div>
+             @enderror
         </label>
             </div>
             <div class="flex items-center justify-between">

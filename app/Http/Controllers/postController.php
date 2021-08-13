@@ -42,11 +42,11 @@ class postController extends Controller
     {
 
         Log::info("store");
-        $validator = $request->validate([
+       
 
-            'title' => 'required',
-            'body' => 'required',
-
+        $request->validate([
+            'title' => 'required|max:255',
+            'body' => 'required|max:500',
         ]);
 
         $post = new Post();

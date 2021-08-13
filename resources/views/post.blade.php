@@ -140,7 +140,7 @@
                       <div class="col-sm-9">
                         <textarea class="form-control" id="body" name="body" rows="3"></textarea>
                         {{-- <input type="password" class="form-control" id="inputPassword3" placeholder="Password"> --}}
-                      </div>
+                      </div>                      
                     </div>
 
                     <div class="form-group row">
@@ -191,7 +191,7 @@
 
                     <div class="form-group row">
                       <div class="col-sm-10">
-                        <button type="submit" class="btn btn-primary">Update Post</button>
+                        <button type="submit" id="submit" class="btn btn-primary">Update Post</button>
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
 
                       </div>
@@ -244,7 +244,7 @@
             }
     });
 
-    $('body').on('click', '#submit', function (event) {
+    $('body').on('click', '#editPost', function (event) {
         event.preventDefault()
         var id = $("#post_id").val();
         var name = $("#title").val();
